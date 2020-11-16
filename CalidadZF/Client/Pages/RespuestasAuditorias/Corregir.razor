@@ -1,0 +1,68 @@
+﻿@page "/RespuestasAuditorias/Corregir/{DetalleAuditoriaID:int}"
+@inject IRepositorio repositorio
+@inject IMostrarMensajes mostrarMensaje
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "admin")]
+
+<h3>Corregir Punto</h3>
+
+@if (detalleAuditoria == null)
+{
+    <text>Cargando...</text>
+}
+else
+{
+    <FormularioCorregirRespuesta OnValidSubmit="Editar"
+                                 detalleAuditoria="detalleAuditoria" 
+                                 PuntosAuditoria="PuntoAuditoria"
+                                 ListadoRespuestasDetalleAuditoria="ListadoRespuestasDetalleAuditoria"></FormularioCorregirRespuesta>
+}
+
+@code {
+    [Parameter] public int DetalleAuditoriaID { get; set; }
+    DetalleAuditoria detalleAuditoria;
+    private PuntoAuditoria PuntoAuditoria = new PuntoAuditoria();
+    private List<RespuestaDetalleAuditoria> ListadoRespuestasDetalleAuditoria = new List<RespuestaDetalleAuditoria>();
+    private List<Persona> ActoresSeleccionados { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var responseHttpdetalleAuditoria = await repositorio.Get<DetalleAuditoria>($"api/DetalleAuditoria/{DetalleAuditoriaID}");
+
+
+        if (responseHttpdetalleAuditoria.Error)
+        {
+            if (responseHttpdetalleAuditoria.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("");
+            }
+            else
+            {
+                await mostrarMensaje.MostrarMensajeError(await responseHttpdetalleAuditoria.GetBody());
+            }
+        }
+        else
+        {
+            detalleAuditoria = responseHttpdetalleAuditoria.Response;
+
+            var responseHttpPuntoAuditoria = await repositorio.Get<PuntoAuditoria>($"api/PuntosAuditoria/{detalleAuditoria.PuntoAuditoriaID}");
+            PuntoAuditoria = responseHttpPuntoAuditoria.Response;
+
+            var responseHttpRespuestasDetalleAuditoria = await repositorio.Get<List<RespuestaDetalleAuditoria>>("api/RespuestasDetalleAuditoria");
+            ListadoRespuestasDetalleAuditoria = responseHttpRespuestasDetalleAuditoria.Response;
+        }
+    }
+
+    private async Task Editar()
+    {
+        var httpResponse = await repositorio.Put("api/DetalleAuditoria", detalleAuditoria);
+        if (httpResponse.Error)
+        {
+            await mostrarMensaje.MostrarMensajeError(await httpResponse.GetBody());
+        }
+        else
+        {
+            navigationManager.NavigateTo($"DetalleAuditoria/{DetalleAuditoriaID}");
+        }
+    }
+}

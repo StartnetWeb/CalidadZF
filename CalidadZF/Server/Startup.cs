@@ -72,6 +72,9 @@ namespace CalidadZF.Server
             app.UseAuthentication();
             app.UseAuthorization();
 
+
+            app.UseResponseCompression();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

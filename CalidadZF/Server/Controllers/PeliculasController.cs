@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using CalidadFZ.Server.Helpers;
-using CalidadFZ.Shared.DTOs;
-using CalidadFZ.Shared.Entidades;
+using CalidadZF.Server.Helpers;
+using CalidadZF.Shared.DTOs;
+using CalidadZF.Shared.Entidades;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CalidadFZ.Server.Controllers
+namespace CalidadZF.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

@@ -1,0 +1,15 @@
+﻿<div class="selector">
+    <select name="@Nombre" id="@Nombre" class="form-control">
+        @foreach (var item in ListaElementos)
+        {
+            <option class="active">@item.Valor</option>
+        }
+    </select>
+</div>
+
+@code {
+    [Parameter]
+    public string Nombre { get; set; }
+    [Parameter]
+    public List<SelectorMultipleModel> ListaElementos { get; set; } = new List<SelectorMultipleModel>();
+}

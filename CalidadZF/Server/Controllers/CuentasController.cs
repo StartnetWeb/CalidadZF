@@ -1,4 +1,4 @@
-﻿using CalidadFZ.Shared.DTOs;
+﻿using CalidadZF.Shared.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CalidadFZ.Server.Controllers
+namespace CalidadZF.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

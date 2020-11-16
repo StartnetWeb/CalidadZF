@@ -1,11 +1,11 @@
-﻿using CalidadFZ.Shared.Entidades;
+﻿using CalidadZF.Shared.Entidades;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CalidadFZ.Server.Controllers
+namespace CalidadZF.Server.Controllers
 {
     [Route("api/notificaciones")]
     [ApiController]

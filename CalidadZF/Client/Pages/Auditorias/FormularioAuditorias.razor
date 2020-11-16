@@ -1,0 +1,291 @@
+﻿@inject IRepositorio repositorio
+
+<EditForm Model="auditoria" OnValidSubmit="OnDataAnnonationsValidated">
+    <DataAnnotationsValidator />
+
+    @if (MostrarScanner)
+    {
+        <Confirmacion Titulo="Scanear" @ref="confirmacion"> 
+            <ChildContent>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <BarcodeQrScanner Title="@TituloScanner"
+                                              BarcodeReaded="NroScanned"
+                                              NroOrden="@LeerNroOrden"></BarcodeQrScanner>
+                        </div>
+                    </div>
+                </div>
+            </ChildContent>                                                 
+        </Confirmacion>
+    }
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <label>Nro de Orden:</label>
+                <button type="button" class="btn btn-primary"
+                        @onclick="confirmacion.Mostrar">
+                    Leer Nro de Orden
+                </button>
+                <div>
+                    <InputText class="form-control" @bind-Value="@NroDeOrden" readonly="readonly" />
+                    <ValidationMessage For="@(() => auditoria.NroOrden)" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>Nro de Pieza:</label>
+                <button type="button" class="btn btn-primary"
+                        @onclick="LeerNroDePieza">
+                    Leer Nro de Pieza
+                </button>
+                <div>
+                    <InputText class="form-control" @bind-Value="@NroDePieza" readonly="readonly" />
+                    <ValidationMessage For="@(() => auditoria.NroPieza)" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Areas:</label>
+        <div>
+            <SelectorTypeahead Context="Area"
+                               SearchMethod="BuscarAreas"
+                               ElementosSeleccionados="AreaSeleccionada"
+                               ControlName="Area"
+                               Placeholder="Nombre del Area">
+                <MyListTemplate>
+                    @Area.Descripcion
+                </MyListTemplate>
+                <MyResultTemplate>
+                    @Area.Descripcion
+                </MyResultTemplate>
+            </SelectorTypeahead>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Procesos:</label>
+        <div>
+            <SelectorTypeahead Context="Proceso"
+                               SearchMethod="BuscarProcesos"
+                               ElementosSeleccionados="ProcesoSeleccionado"
+                               ControlName="Proceso"
+                               Placeholder="Nombre del Proceso">
+                <MyListTemplate>
+                    @Proceso.Descripcion
+                </MyListTemplate>
+                <MyResultTemplate>
+                    @Proceso.Descripcion
+                </MyResultTemplate>
+            </SelectorTypeahead>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Maquinas:</label>
+        <div>
+            <SelectorTypeahead Context="Maquina"
+                               SearchMethod="BuscarMaquinas"
+                               ElementosSeleccionados="MaquinaSeleccionada"
+                               ControlName="Maquina"
+                               Placeholder="Nro de la Maquina">
+                <MyListTemplate>
+                    @Maquina.Descripcion
+                </MyListTemplate>
+                <MyResultTemplate>
+                    @Maquina.Descripcion
+                </MyResultTemplate>
+            </SelectorTypeahead>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-6">
+                <label>Operario:<small>(Buscar Por Legajo)</small></label>
+                <div>
+                    <SelectorTypeahead Context="Operario"
+                                       SearchMethod="BuscarOperarios"
+                                       ElementosSeleccionados="OperarioSeleccionado"
+                                       ControlName="Operario"
+                                       Placeholder="Buscar Por Legajo">
+                        <MyListTemplate>
+                            @Operario.Legajo
+                        </MyListTemplate>
+                        <MyResultTemplate>
+                            @Operario.Legajo
+                        </MyResultTemplate>
+                    </SelectorTypeahead>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <label>Supervisores:<small>(Buscar Por Legajo)</small></label>
+                <div>
+                    <SelectorTypeahead Context="Supervisor"
+                                       SearchMethod="BuscarSupervisores"
+                                       ElementosSeleccionados="SupervisorSeleccionado"
+                                       ControlName="Supervisor"
+                                       Placeholder="Buscar Por Legajo">
+                        <MyListTemplate>
+                            @Supervisor.Legajo
+                        </MyListTemplate>
+                        <MyResultTemplate>
+                            @Supervisor.Legajo
+                        </MyResultTemplate>
+                    </SelectorTypeahead>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @foreach (var detalleAuditoria in ListadoDetallesAuditoria)
+    {
+        <RespuestaPuntoAuditoria detalleAuditoria="detalleAuditoria">
+        </RespuestaPuntoAuditoria>
+        @*<div class="form-group">
+                <label>@punto.Descripcion</label>
+                <div>
+                    @foreach (var respuesta in ListadoRespuestasDetalleAuditoria)
+                    {
+                        respuesta.PuntoAuditoriaID = punto.ID;
+                        <a class="btn btn-@claseColor" @onclick="@(() => Responder(respuesta))">@respuesta.Descripcion</a>
+                    }
+                </div>
+            </div>*@
+    }
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+</EditForm>
+
+@code {
+    private Confirmacion confirmacion = new Confirmacion();
+   
+    private string claseColor = "light", NroDeOrden = "", NroDePieza = "", TituloScanner = "";
+    private bool MostrarScanner = false, LeerNroOrden = false, LeerNroPieza = false;
+
+    [Parameter] public Auditoria auditoria { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter] public List<Area> ListadoAreas { get; set; } = new List<Area>();
+    [Parameter] public List<Area> AreaSeleccionada { get; set; } = new List<Area>();
+
+    [Parameter] public List<Proceso> ListadoProcesos { get; set; } = new List<Proceso>();
+    [Parameter] public List<Proceso> ProcesoSeleccionado { get; set; } = new List<Proceso>();
+
+    [Parameter] public List<Maquina> ListadoMaquinas { get; set; } = new List<Maquina>();
+    [Parameter] public List<Maquina> MaquinaSeleccionada { get; set; } = new List<Maquina>();
+
+    [Parameter] public List<Operario> ListadoSupervisores { get; set; } = new List<Operario>();
+    [Parameter] public List<Operario> SupervisorSeleccionado { get; set; } = new List<Operario>();
+
+    [Parameter] public List<Operario> ListadoOperarios { get; set; } = new List<Operario>();
+    [Parameter] public List<Operario> OperarioSeleccionado { get; set; } = new List<Operario>();
+
+    [Parameter] public List<PuntoAuditoria> ListadoPuntosAuditoria { get; set; } = new List<PuntoAuditoria>();
+    [Parameter] public List<RespuestaDetalleAuditoria> ListadoRespuestasDetalleAuditoria { get; set; } = new List<RespuestaDetalleAuditoria>();
+
+    public List<DetalleAuditoria> ListadoDetallesAuditoria = new List<DetalleAuditoria>();
+
+    protected override void OnInitialized()
+    {
+        foreach (var punto in ListadoPuntosAuditoria)
+        {
+            ListadoDetallesAuditoria.Add(new DetalleAuditoria()
+            {
+                PuntoAuditoriaID = punto.ID,
+                RespuestaID = 3
+            });
+        }
+    }
+
+    private async Task<IEnumerable<Area>> BuscarAreas(string searchText)
+    {
+        var responseHttp = await repositorio.Get<List<Area>>($"api/Areas/buscar/{searchText}");
+        return responseHttp.Response;
+    }
+
+    private async Task<IEnumerable<Proceso>> BuscarProcesos(string searchText)
+    {
+        int id = AreaSeleccionada.FirstOrDefault().ID;
+        var responseHttp = await repositorio.Get<List<Proceso>>($"api/Procesos/buscar/{searchText}?Id=" + id);
+        return responseHttp.Response;
+    }
+
+    private async Task<IEnumerable<Maquina>> BuscarMaquinas(string searchText)
+    {
+        int id = ProcesoSeleccionado.FirstOrDefault().ID;
+        var responseHttp = await repositorio.Get<List<Maquina>>($"api/Maquinas/buscar/{searchText}?Id=" + id);
+        return responseHttp.Response;
+    }
+
+    private async Task<IEnumerable<Operario>> BuscarSupervisores(string searchText)
+    {
+        int tipoFiltro = 1;
+        var responseHttp = await repositorio.Get<List<Operario>>($"api/Operarios/buscar/{searchText}?tipoFiltro=" + tipoFiltro);
+        return responseHttp.Response;
+    }
+
+    private async Task<IEnumerable<Operario>> BuscarOperarios(string searchText)
+    {
+        var responseHttp = await repositorio.Get<List<Operario>>($"api/Operarios/buscar/{searchText}");
+        return responseHttp.Response;
+    }
+
+    public async void LeerNroDeOrden()
+    {
+        MostrarScanner = true;
+        LeerNroOrden = true;
+        TituloScanner = "Scanear Nro de Orden";
+    }
+
+    public async void LeerNroDePieza()
+    {
+        MostrarScanner = true;
+        LeerNroOrden = false;
+        TituloScanner = "Scanear Nro de Pieza";
+    }
+
+    public async void NroScanned((string _textScanned, bool _NroOrden) _returedValue)
+    {
+        if (_returedValue._NroOrden)
+        {
+            NroDeOrden = _returedValue._textScanned;
+        }
+        else
+        {
+            NroDePieza = _returedValue._textScanned;
+        }
+    }
+
+    private async Task OnDataAnnonationsValidated()
+    {
+        auditoria.NroOrden = NroDeOrden;
+
+        auditoria.NroPieza = NroDePieza;
+
+        auditoria.AreaID = AreaSeleccionada.Select(x => x.ID).FirstOrDefault();
+
+        auditoria.ProcesoID = ProcesoSeleccionado.Select(x => x.ID).FirstOrDefault();
+
+        auditoria.MaquinaID = MaquinaSeleccionada.Select(x => x.ID).FirstOrDefault();
+
+        auditoria.MaquinaProcesoID = MaquinaSeleccionada.Select(x => x.ProcesoMaquinaID).FirstOrDefault();
+
+        auditoria.SupervisorID = SupervisorSeleccionado.Select(x => x.ID).FirstOrDefault();
+
+        auditoria.OperarioID = OperarioSeleccionado.Select(x => x.ID).FirstOrDefault();
+
+        DateTime fecha = DateTime.Now;
+
+        auditoria.Fecha = fecha;
+        auditoria.Hora = fecha.Hour.ToString().PadLeft(2, '0') + ":" + fecha.Minute.ToString().PadLeft(2, '0');
+        auditoria.Mes = fecha.Month;
+        auditoria.Anio = fecha.Year;
+
+        auditoria.DetallesAuditoria = ListadoDetallesAuditoria;
+
+        await OnValidSubmit.InvokeAsync(null);
+    }
+}

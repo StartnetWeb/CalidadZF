@@ -1,0 +1,46 @@
+﻿@inject IRepositorio repositorio
+
+<EditForm Model="detalleAuditoria" OnValidSubmit="OnDataAnnonationsValidated">
+    <DataAnnotationsValidator />
+    
+    <div class="form-group">
+        <label>@PuntosAuditoria.Descripcion</label>
+        <div>
+            @foreach (var respuesta in ListadoRespuestasDetalleAuditoria)
+            {
+                <a class="btn btn-@respuesta.ClaseHtml" @onclick="@(() => Responder(respuesta))">@respuesta.Descripcion</a>
+            }
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+</EditForm>
+
+@code {
+    [Parameter] public DetalleAuditoria detalleAuditoria { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+
+    [Parameter] public PuntoAuditoria PuntosAuditoria { get; set; } = new PuntoAuditoria();
+    [Parameter] public List<RespuestaDetalleAuditoria> ListadoRespuestasDetalleAuditoria { get; set; } = new List<RespuestaDetalleAuditoria>();
+    public DetalleAuditoria respuestasAuditoria = new DetalleAuditoria();
+
+    //protected override void OnInitialized()
+    //{
+    //    //Seleccionados = GenerosSeleccionados.Select(x => new SelectorMultipleModel(x.Id.ToString(), x.Nombre)).ToList();
+    //    //NoSeleccionados = GenerosNoSeleccionados.Select(x => new SelectorMultipleModel(x.Id.ToString(), x.Nombre)).ToList();
+    //}
+
+    private void Responder(RespuestaDetalleAuditoria respuestaDetalleAuditoria)
+    {
+        respuestasAuditoria.RespuestaID = respuestaDetalleAuditoria.ID;
+    }
+
+    private async Task OnDataAnnonationsValidated()
+    {
+
+        detalleAuditoria.RespuestaID = respuestasAuditoria.RespuestaID;
+
+        await OnValidSubmit.InvokeAsync(null);
+    }
+}

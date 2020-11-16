@@ -4,16 +4,16 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AutoMapper;
-using CalidadFZ.Shared.DTOs;
-using CalidadFZ.Shared.Entidades;
-using CalidadFZ.Server.Helpers;
+using CalidadZF.Shared.DTOs;
+using CalidadZF.Shared.Entidades;
+using CalidadZF.Server.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CalidadFZ.Server.Controllers
+namespace CalidadZF.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

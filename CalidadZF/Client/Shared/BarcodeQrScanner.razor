@@ -1,0 +1,36 @@
+﻿@inject IJSRuntime JSRuntime
+
+<BarcodeReader StartCameraAutomatically="true"
+               Title="@Title"
+               VideoWidth="450"
+               VideoHeigth="200"
+               ShowVideoDeviceList="false" />
+
+@code {
+
+    [Parameter] public EventCallback<(string, bool)> BarcodeReaded { get; set; }
+    [Parameter] public bool NroOrden { get; set; } = false;
+    [Parameter] public string Title { get; set; } = "";
+    private string localBarcodeText;
+
+    public string LocalBarcodeText {
+        get => localBarcodeText;
+        set
+        {
+            localBarcodeText = value;
+            BarcodeReaded.InvokeAsync((value,NroOrden));
+        }
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        JsInteropClass.BarcodeReceived += LocalReceivedBarcodeText; // attach to Barcodereceived event
+    }
+
+    private void LocalReceivedBarcodeText(BarcodeReceivedEventArgs args)
+    {
+        LocalBarcodeText = args.BarcodeText;
+        StateHasChanged();
+    }
+}
