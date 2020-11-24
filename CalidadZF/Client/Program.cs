@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using CalidadZF.Client.Helpers;
+using CalidadZF.Client.Repositorios;
+using Blazor.FileReader;
 
 namespace CalidadZF.Client
 {
@@ -27,6 +30,19 @@ namespace CalidadZF.Client
             builder.Services.AddApiAuthorization();
 
             await builder.Build().RunAsync();
+        }
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddOptions();
+      
+            services.AddScoped<IRepositorio, Repositorio>();
+            services.AddScoped<IMostrarMensajes, MostrarMensajes>();
+            services.AddAuthorizationCore();
+
+            services.AddSingleton<AppState>();
+
+            services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
+
         }
     }
 }

@@ -73,6 +73,5 @@ namespace CalidadZF.Server
         public DbSet<PuntoAuditoria> PuntosAuditoria { get; set; }
         public DbSet<RespuestaDetalleAuditoria> RespuestasDetalleAuditoria { get; set; }
 
-        //public DbSet<>  { get; set; }
     }
 }
