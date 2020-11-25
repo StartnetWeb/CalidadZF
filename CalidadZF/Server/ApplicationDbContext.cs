@@ -2,10 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CalidadZF.Server
 {
@@ -53,14 +49,13 @@ namespace CalidadZF.Server
 
             base.OnModelCreating(modelBuilder);
         }
-
-        public DbSet<GeneroPelicula> GenerosPeliculas { get; set; }
-        public DbSet<Pelicula> Peliculas { get; set; }
-        public DbSet<Genero> Generos { get; set; }
-        public DbSet<Persona> Personas { get; set; }
-        public DbSet<PeliculaActor> PeliculasActores { get; set; }
-        public DbSet<VotoPelicula> VotosPeliculas { get; set; }
-        public DbSet<Notificacion> Notificaciones { get; set; }
+        //public DbSet<GeneroPelicula> GenerosPeliculas { get; set; }
+        //public DbSet<Pelicula> Peliculas { get; set; }
+        //public DbSet<Genero> Generos { get; set; }
+        //public DbSet<Persona> Personas { get; set; }
+        //public DbSet<PeliculaActor> PeliculasActores { get; set; }
+        //public DbSet<VotoPelicula> VotosPeliculas { get; set; }
+        //public DbSet<Notificacion> Notificaciones { get; set; }
 
         //Zf
         public DbSet<Operario> Operarios { get; set; }

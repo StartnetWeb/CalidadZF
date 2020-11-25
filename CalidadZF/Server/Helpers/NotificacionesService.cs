@@ -21,41 +21,41 @@ namespace CalidadZF.Server.Helpers
             this.context = context;
         }
 
-        public async Task EnviarNotificacionPeliculaEnCartelera(Pelicula pelicula)
-        {
-            var notificaciones = await context.Notificaciones.ToListAsync();
+        //public async Task EnviarNotificacionPeliculaEnCartelera(Pelicula pelicula)
+        //{
+        //    var notificaciones = await context.Notificaciones.ToListAsync();
 
-            var llavePublica = configuration.GetValue<string>("notificaciones:llave_publica");
-            var llavePrivada = configuration.GetValue<string>("notificaciones:llave_privada");
-            var email = configuration.GetValue<string>("notificaciones:email");
+        //    var llavePublica = configuration.GetValue<string>("notificaciones:llave_publica");
+        //    var llavePrivada = configuration.GetValue<string>("notificaciones:llave_privada");
+        //    var email = configuration.GetValue<string>("notificaciones:email");
 
-            var vapidDetails = new VapidDetails(email, llavePublica, llavePrivada);
+        //    var vapidDetails = new VapidDetails(email, llavePublica, llavePrivada);
 
-            foreach (var notificacion in notificaciones)
-            {
-                var pushSubscription = new PushSubscription(notificacion.URL,
-                    notificacion.P256dh, notificacion.Auth);
+        //    foreach (var notificacion in notificaciones)
+        //    {
+        //        var pushSubscription = new PushSubscription(notificacion.URL,
+        //            notificacion.P256dh, notificacion.Auth);
 
-                var webPushClient = new WebPushClient();
+        //        var webPushClient = new WebPushClient();
 
-                try
-                {
-                    var payload = JsonSerializer.Serialize(new
-                    {
-                        titulo = pelicula.Titulo,
-                        imagen = pelicula.Poster,
-                        url = $"pelicula/{pelicula.Id}"
-                    });
+        //        try
+        //        {
+        //            var payload = JsonSerializer.Serialize(new
+        //            {
+        //                titulo = pelicula.Titulo,
+        //                imagen = pelicula.Poster,
+        //                url = $"pelicula/{pelicula.Id}"
+        //            });
 
-                    await webPushClient.SendNotificationAsync(pushSubscription, payload, vapidDetails);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    // ...
-                }
-            }
+        //            await webPushClient.SendNotificationAsync(pushSubscription, payload, vapidDetails);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine(ex.Message);
+        //            // ...
+        //        }
+        //    }
 
-        }
+        //}
     }
 }

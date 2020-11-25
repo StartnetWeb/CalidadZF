@@ -1,7 +1,19 @@
-﻿@page "/"
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+﻿<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <Authorizing>
+                <text>Autorizando...</text>
+            </Authorizing>
+            <NotAuthorized>
+                <text>No estas autorizado para ver este contenido</text>
+            </NotAuthorized>
+        </AuthorizeRouteView>
+    </Found>
+    <NotFound>
+        <CascadingAuthenticationState>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <CustomNotFound></CustomNotFound>
+            </LayoutView>
+        </CascadingAuthenticationState>
+    </NotFound>
+</Router>

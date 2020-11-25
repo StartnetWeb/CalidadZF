@@ -26,17 +26,17 @@ namespace CalidadZF.Server.Controllers
             return NoContent();
         }
 
-        [HttpPost("desuscribir")]
-        public async Task<ActionResult> Desuscribir(Notificacion notificacion)
-        {
-            var notificacionDB = context.Notificaciones
-                .FirstOrDefault(x => x.Auth == notificacion.Auth && x.P256dh == notificacion.P256dh);
+        //[HttpPost("desuscribir")]
+        //public async Task<ActionResult> Desuscribir(Notificacion notificacion)
+        //{
+        //    var notificacionDB = context.Notificaciones
+        //        .FirstOrDefault(x => x.Auth == notificacion.Auth && x.P256dh == notificacion.P256dh);
 
-            if (notificacionDB == null) { return NotFound(); }
+        //    if (notificacionDB == null) { return NotFound(); }
 
-            context.Remove(notificacionDB);
-            await context.SaveChangesAsync();
-            return NoContent();
-        }
+        //    context.Remove(notificacionDB);
+        //    await context.SaveChangesAsync();
+        //    return NoContent();
+        //}
     }
 }
