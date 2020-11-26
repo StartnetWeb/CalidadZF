@@ -1,16 +1,14 @@
-using System;
-using System.Net.Http;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Blazor.FileReader;
+using CalidadZF.Client.Auth;
 using CalidadZF.Client.Helpers;
 using CalidadZF.Client.Repositorios;
-using Blazor.FileReader;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace CalidadZF.Client
 {
@@ -18,18 +16,15 @@ namespace CalidadZF.Client
     {
         public static async Task Main(string[] args)
         {
+            // Esta adaptado al de peliculas
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
-
-            builder.Services.AddHttpClient("CalidadZF.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
-                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
-
-            // Supply HttpClient instances that include access tokens when making requests to the server project
-            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("CalidadZF.ServerAPI"));
-
-            builder.Services.AddApiAuthorization();
+            builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            ConfigureServices(builder.Services);
 
             await builder.Build().RunAsync();
+
+
         }
         private static void ConfigureServices(IServiceCollection services)
         {
@@ -42,6 +37,12 @@ namespace CalidadZF.Client
             services.AddSingleton<AppState>();
 
             services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
+            services.AddScoped<ProveedorAutenticacionJWT>();
+
+            services.AddScoped<AuthenticationStateProvider, ProveedorAutenticacionJWT>(
+                provider => provider.GetRequiredService<ProveedorAutenticacionJWT>());
+            services.AddScoped<ILoginService, ProveedorAutenticacionJWT>(
+                provider => provider.GetRequiredService<ProveedorAutenticacionJWT>());
 
         }
     }
