@@ -1,6 +1,6 @@
 ﻿<div>
     <div class="top-row pl-4 navbar navbar-dark">
-        <a class="navbar-brand" href="">BlazorPeliculas</a>
+        <a class="navbar-brand" href="">Calidad ZF</a>
         <button class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -28,8 +28,8 @@
                     <span class="oi oi-list-rich" aria-hidden="true"></span> Filtro Películas
                 </NavLink>
             </li>
-            <AuthorizeView Roles="admin">
-                <Authorized>
+            @*<AuthorizeView Roles="admin">
+                <Authorized>*@
                     <li class="nav-item px-3">
                         <NavLink class="nav-link" href="generos">
                             <span class="oi oi-list-rich" aria-hidden="true"></span> Generos
@@ -55,8 +55,8 @@
                             <span class="oi oi-list-rich" aria-hidden="true"></span> Auditorias
                         </NavLink>
                     </li>
-                </Authorized>
-            </AuthorizeView>
+                @*</Authorized>
+            </AuthorizeView>*@
         </ul>
     </div>
 </div>
