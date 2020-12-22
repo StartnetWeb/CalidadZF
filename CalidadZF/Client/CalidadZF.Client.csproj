@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Auth\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
 

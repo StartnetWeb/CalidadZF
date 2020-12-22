@@ -74,7 +74,7 @@ namespace CalidadZF.Server.Controllers
                 new Claim(ClaimTypes.Name, userInfo.Email),
                 new Claim("miValor", "Lo que yo quiera"),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+            };
 
             foreach (var rol in roles)
             {
