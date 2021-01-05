@@ -29,7 +29,7 @@
                     Leer Nro de Orden
                 </button>
                 <div>
-                    <InputText class="form-control" @bind-Value="@NroDeOrden" readonly="readonly" />
+                    <InputText  class="form-control" @bind-Value="@NroDeOrden" readonly="readonly" />
                     <ValidationMessage For="@(() => auditoria.NroOrden)" />
                 </div>
             </div>
@@ -240,14 +240,14 @@
         TituloScanner = "Scanear Nro de Orden";
     }
 
-    public async void LeerNroDePieza()
+    public void LeerNroDePieza()
     {
         MostrarScanner = true;
         LeerNroOrden = false;
         TituloScanner = "Scanear Nro de Pieza";
     }
 
-    public async void NroScanned((string _textScanned, bool _NroOrden) _returedValue)
+    public void NroScanned((string _textScanned, bool _NroOrden) _returedValue)
     {
         if (_returedValue._NroOrden)
         {
